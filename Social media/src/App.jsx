@@ -69,7 +69,13 @@ function App() {
         <Header title="Social Media" />
         <Nav search={search} setSearch={setSearch} />
         <Home posts={searchResults} />
-        <NewPost />
+        <NewPost
+          handleSubmit={handleSubmit}
+          postTitle={postTitle}
+          postBody={postBody}
+          setPostBody={setPostBody}
+          setPostTitle={setPostTitle}
+        />
         <PostPage />
         <About />
         <Missing />
