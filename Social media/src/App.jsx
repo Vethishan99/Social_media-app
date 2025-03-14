@@ -7,7 +7,7 @@ import PostPage from "./PostPage";
 import About from "./About";
 import Missing from "./Missing";
 import Footer from "./Footer";
-import { Route, Routes, Link } from "react-router-dom";
+import { Route, Routes, Link, useNavigate } from "react-router-dom";
 import Post from "./Post";
 import PostLayout from "./PostLayout";
 import { format } from "date-fns";
@@ -43,6 +43,7 @@ function App() {
   const [searchResults, setSearchReasult] = useState([]);
   const [postTitle, setPostTitle] = useState("");
   const [postBody, setPostBody] = useState("");
+  const navigate = useNavigate("");
 
   useEffect(() => {
     const filteredResults = posts.filter(
@@ -63,6 +64,12 @@ function App() {
     setPostTitle("");
     setPostBody("");
   };
+  const handleDelete = (id) => {
+    const postList = posts.filter((post) => post.id !== id);
+    setPosts(postList);
+    navigate("/");
+  };
+
   return (
     <>
       <div className="mDiv">
@@ -70,18 +77,24 @@ function App() {
         <Nav search={search} setSearch={setSearch} />
         <Routes>
           <Route path="/" element={<Home posts={searchResults} />} />
-          <Route
-            path="post"
-            element={
-              <NewPost
-                handleSubmit={handleSubmit}
-                postTitle={postTitle}
-                postBody={postBody}
-                setPostBody={setPostBody}
-                setPostTitle={setPostTitle}
-              />
-            }
-          />
+          <Route path="post">
+            <Route
+              index
+              element={
+                <NewPost
+                  handleSubmit={handleSubmit}
+                  postTitle={postTitle}
+                  postBody={postBody}
+                  setPostBody={setPostBody}
+                  setPostTitle={setPostTitle}
+                />
+              }
+            />
+            <Route
+              path=":id"
+              element={<PostPage posts={posts} handleDelete={handleDelete} />}
+            />
+          </Route>
           {/* <Route path="/post" element={<PostPage />} /> */}
           <Route path="about" element={<About />} />
           <Route path="*" element={<Missing />} />
