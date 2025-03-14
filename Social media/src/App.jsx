@@ -68,17 +68,25 @@ function App() {
       <div className="mDiv">
         <Header title="Social Media" />
         <Nav search={search} setSearch={setSearch} />
-        <Home posts={searchResults} />
-        <NewPost
-          handleSubmit={handleSubmit}
-          postTitle={postTitle}
-          postBody={postBody}
-          setPostBody={setPostBody}
-          setPostTitle={setPostTitle}
-        />
-        <PostPage />
-        <About />
-        <Missing />
+        <Routes>
+          <Route path="/" element={<Home posts={searchResults} />} />
+          <Route
+            path="post"
+            element={
+              <NewPost
+                handleSubmit={handleSubmit}
+                postTitle={postTitle}
+                postBody={postBody}
+                setPostBody={setPostBody}
+                setPostTitle={setPostTitle}
+              />
+            }
+          />
+          {/* <Route path="/post" element={<PostPage />} /> */}
+          <Route path="about" element={<About />} />
+          <Route path="*" element={<Missing />} />
+        </Routes>
+
         <Footer />
       </div>
     </>
