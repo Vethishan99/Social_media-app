@@ -11,39 +11,33 @@ import { Route, Routes, Link, useNavigate } from "react-router-dom";
 import Post from "./Post";
 import PostLayout from "./PostLayout";
 import { format } from "date-fns";
+import api from "./Api/posts";
 
 function App() {
-  const [posts, setPosts] = useState([
-    {
-      id: 1,
-      title: "My first Post",
-      datetime: "July 01, 2021 11:17:36 AM",
-      body: "Made a video about Tesla Q1 results",
-    },
-    {
-      id: 2,
-      title: "My 2nd Post",
-      datetime: "July 01 2021 11:17:36 AM",
-      body: "I attended a DeFi blockchain event",
-    },
-    {
-      id: 3,
-      title: "My 3rd Post",
-      datetime: "July 01, 2021 11:17:36 AM",
-      body: "Web3 global summit next week",
-    },
-    {
-      id: 4,
-      title: "My forth Post",
-      datetime: "July 01, 2021 11:17:36 AM",
-      body: "ETH will out perform BTC",
-    },
-  ]);
+  const [posts, setPosts] = useState([]);
   const [search, setSearch] = useState("");
   const [searchResults, setSearchReasult] = useState([]);
   const [postTitle, setPostTitle] = useState("");
   const [postBody, setPostBody] = useState("");
   const navigate = useNavigate("");
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        const response = await api.get("/posts");
+        setPosts(response.data);
+      } catch (err) {
+        if (err.response) {
+          console.log(err.response.data);
+          console.log(err.response.status);
+          console.log(err.response.headers);
+        } else {
+          console.log(`Error: ${err.message}`);
+        }
+      }
+    };
+    fetchPosts();
+  }, []);
 
   useEffect(() => {
     const filteredResults = posts.filter(
@@ -53,7 +47,6 @@ function App() {
     );
     setSearchReasult(filteredResults.reverse());
   }, [posts, search]);
-
   const handleSubmit = (e) => {
     e.preventDefault();
     const id = posts.length ? posts[posts.length - 1].id + 1 : 1;
@@ -72,7 +65,7 @@ function App() {
 
   return (
     <>
-      <div className="mDiv">
+      <div className="App">
         <Header title="Social Media" />
         <Nav search={search} setSearch={setSearch} />
         <Routes>
